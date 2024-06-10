@@ -302,13 +302,12 @@ def puntos_de_funcion():
     actualizar_total()
     actualizar_total_final()
 
+
 def casos_de_uso():
-    # Colores globales
     cuadro = tk.Canvas(root, width=root.winfo_screenwidth() * 0.9, height=root.winfo_screenheight() * 1.0, bg="white")
     pos_x = root.winfo_screenwidth() * 0.08  # Posición x al 10% del ancho de la pantalla
     pos_y = root.winfo_screenheight() * 0.0  # Posición y al 10% del alto de la pantalla
     cuadro.place(x=pos_x, y=pos_y)
-
 
     COLOR_FONDO = "#D6EAF8"         # Light Blue
     COLOR_TITULO = "#000000"        # Dark Blue
@@ -448,67 +447,100 @@ def casos_de_uso():
     # ----------------------------------------------------------------------------------------
     # Crear un Frame para la sección que ocupe el 40% del tamaño de la root
 
-    def crear_seccion(x, y):
-        # Arreglo de los factores
-        factores_ambientales = {
-            "Objetivos de performance o tiempo de respuesta": 2,
+    def actualizar_suma(variables_valor, total_labels, total_label, resultado_label, factores):
+        total_general = 0
+        for i, var in enumerate(variables_valor):
+            peso = list(factores.values())[i]
+            total = var.get() * peso
+            total_labels[i].config(text=str(total))
+            total_general += total
+        total_label.config(text=str(total_general))
+        resultado_label.config(text=f"Total de Factores Técnicos: {total_general}")
+    
+    #Arreglo de los factores Técnicos
+    factores_tecnicos = {
+            "Sistema Distribuido": 2,
+            "Objetivos de performance o tiempo de respuesta": 1,
             "Eficiencia del usuario final": 1,
             "Procesamiento interno complejo": 1,
             "El código debe ser reutilizable": 1,
-            "Facilidad de instalación": 1,
+            "Facilidad de instalación": 0.5,
             "Facilidad de uso": 0.5,
-            "Portabilidad": 0.5,
-            "Facilidad de cambio": 2,
+            "Portabilidad": 2,
+            "Facilidad de cambio": 1,
             "Concurrencia": 1,
             "Objetivos especiales de seguridad": 1,
             "Acceso directo a terceras partes": 1,
             "Facilidades especiales de entrenamiento a usuarios": 1
         }
+    #Arreglo de los factores Ambientales
+    factores_ambientales = {
+        "Familiaridad con el modelo del proyecto utilizado": 1.5,
+        "Experiencia en la aplicación": 0.5,
+        "Experiencia en orientación a objetos": 1,
+        "Capacidad del analista líder": 0.5,
+        "Motivación": 1,
+        "Estabilidad de los requerimientos": 2,
+        "Personal a tiempo parcial": -1,
+        "Dificultad del lenguaje de programación": -1
+        }
 
+
+    def crear_seccion(x, y, factores):
         frame_seccion = tk.Frame(root, borderwidth=2, relief=COLOR_BORDE, bg=COLOR_FONDO)
-        frame_seccion.place(relx=x, rely=y, relwidth=0.6, relheight=0.75)
+        frame_seccion.place(relx=x, rely=y, relwidth=0.5, relheight=0.70)
 
         # Crear un Frame para la tabla dentro de la sección
         table_frame = tk.Frame(frame_seccion, bg=COLOR_FONDO)
         table_frame.pack(pady=10, padx=10, fill="both", expand=True)
 
         # Título de la tabla
-        tk.Label(table_frame, text="Factores Técnicos", font=("Arial", 12, "bold"), bg=COLOR_FONDO).grid(row=0, column=0, columnspan=3, pady=(0, 10), sticky="nsew")
+        tk.Label(table_frame, text="Factores Técnicos", font=("Arial", 12, "bold"), bg=COLOR_FONDO).grid(row=0, column=0, columnspan=5, pady=(0, 10), sticky="nsew")
 
-        tk.Label(table_frame, text="Factor", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=5, bg=COLOR_ETIQUETA).grid(row=0, column=0, sticky="nsew")
-        tk.Label(table_frame, text="Descripción", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=40, bg=COLOR_ETIQUETA).grid(row=0, column=1, sticky="nsew")
-        tk.Label(table_frame, text="Peso", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=10, bg=COLOR_ETIQUETA).grid(row=0, column=2, sticky="nsew")
-        tk.Label(table_frame, text="Estimación", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=10, bg=COLOR_ETIQUETA).grid(row=0, column=3, sticky="nsew")
-        tk.Label(table_frame, text="Total", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=10, bg=COLOR_ETIQUETA).grid(row=0, column=4, sticky="nsew")
+        tk.Label(table_frame, text="Factor", borderwidth=1, font=("Arial", 8, "bold"), relief=COLOR_BORDE_INTERNO, width=5, bg=COLOR_ETIQUETA).grid(row=0, column=0, sticky="nsew")
+        tk.Label(table_frame, text="Descripción", borderwidth=1, font=("Arial", 8, "bold"), relief=COLOR_BORDE_INTERNO, width=40, bg=COLOR_ETIQUETA).grid(row=0, column=1, sticky="nsew")
+        tk.Label(table_frame, text="Peso", borderwidth=1, font=("Arial", 8, "bold"), relief=COLOR_BORDE_INTERNO, width=10, bg=COLOR_ETIQUETA).grid(row=0, column=2, sticky="nsew")
+        tk.Label(table_frame, text="Estimación", borderwidth=1, font=("Arial", 8, "bold"), relief=COLOR_BORDE_INTERNO, width=10, bg=COLOR_ETIQUETA).grid(row=0, column=3, sticky="nsew")
+        tk.Label(table_frame, text="Total", borderwidth=1, font=("Arial", 8, "bold"), relief=COLOR_BORDE_INTERNO, width=10, bg=COLOR_ETIQUETA).grid(row=0, column=4, sticky="nsew")
 
-        # Lista para almacenar las variables de control
+        # Lista para almacenar las variables de control y las etiquetas de total
         variables_valor = []
+        total_labels = []
 
         # Agregar datos a la tabla
         conteo = 0  # Comienza desde 0
-        for factor, peso in factores_ambientales.items():
+        for factor, peso in factores.items():
             # Crear y posicionar las etiquetas y menús desplegables
-            tk.Label(table_frame, text=f"T{conteo+1}", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=5, bg=COLOR_ETIQUETA).grid(row=conteo + 1, column=0, sticky="nsew")
+            tk.Label(table_frame, text=f"T{conteo + 1}", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=5, bg=COLOR_ETIQUETA).grid(row=conteo + 1, column=0, sticky="nsew")
             tk.Label(table_frame, text=factor, borderwidth=1, relief=COLOR_BORDE_INTERNO, width=40, bg=COLOR_ETIQUETA).grid(row=conteo + 1, column=1, sticky="nsew")
             tk.Label(table_frame, text=peso, borderwidth=1, relief=COLOR_BORDE_INTERNO, width=10, bg=COLOR_ETIQUETA).grid(row=conteo + 1, column=2, sticky="nsew")
             valor_var = tk.IntVar(value=0)  # Valor inicial en 0
             valor_menu = tk.OptionMenu(table_frame, valor_var, *range(6))  # Menú desplegable de 0 a 5
             valor_menu.grid(row=conteo + 1, column=3, sticky="nsew")
             variables_valor.append(valor_var)  # Almacenar la variable de control en la lista
-            valor_var.trace_add("write", lambda name, index, mode, var=valor_var: actualizar_suma(variables_valor, total_label, resultado_label))
-            tk.Label(table_frame, text=peso*valor_var.get(), borderwidth=1, relief=COLOR_BORDE_INTERNO, width=10, bg=COLOR_ETIQUETA).grid(row=conteo + 1, column=4, sticky="nsew")
+
+            # Crear y almacenar la etiqueta para la columna "Total"
+            total_label = tk.Label(table_frame, text="0", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=10, bg=COLOR_ETIQUETA)
+            total_label.grid(row=conteo + 1, column=4, sticky="nsew")
+            total_labels.append(total_label)
+
+            # Vincular la actualización de la suma a cambios en el menú desplegable
+            valor_var.trace_add("write", lambda name, index, mode, var=valor_var, peso=peso, i=conteo: actualizar_suma(variables_valor, total_labels, total_label_general, resultado_label, factores))
+
             conteo += 1
 
         # Total de la suma de los factores
-        tk.Label(table_frame, text="TOTAL", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=5, bg=COLOR_ETIQUETA).grid(row=conteo + 1, column=0, columnspan=4, sticky="nsew")
-        total_label = tk.Label(table_frame, text="0", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=10, bg=COLOR_ETIQUETA)
-        total_label.grid(row=conteo + 1, column=2, sticky="nsew")
+        tk.Label(table_frame, text="TOTAL", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=65, bg=COLOR_ETIQUETA).grid(row=conteo + 1, column=0, columnspan=4, sticky="nsew")
+        total_label_general = tk.Label(table_frame, text="0", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=10, bg=COLOR_ETIQUETA)
+        total_label_general.grid(row=conteo + 1, column=4, sticky="nsew")
 
         # Resultado final debajo de la tabla
-        resultado_label = tk.Label(frame_seccion, text="Total de Puntos de Función: 0", font=("Arial", 10, "bold"), bg=COLOR_FONDO)
+        resultado_label = tk.Label(frame_seccion, text="Total de Factores Técnicos: 0", font=("Arial", 10, "bold"), bg=COLOR_FONDO)
         resultado_label.pack(pady=(10, 0))
 
-        actualizar_suma(variables_valor, total_label, resultado_label)
+        actualizar_suma(variables_valor, total_labels, total_label_general, resultado_label, factores)
+
+
     # ------------------------------------------------------------------------------------------
     def crear_seccion_resultado(titulo):
         frame_seccion = tk.Frame(root, borderwidth=2, relief=COLOR_BORDE, bg=COLOR_FONDO)
@@ -529,7 +561,7 @@ def casos_de_uso():
 
     def crear_seccion_calculo(titulo):
         frame_seccion = tk.Frame(root, borderwidth=2, relief=COLOR_BORDE, bg=COLOR_FONDO)
-        frame_seccion.place(relx=0.36, rely=0.76, relwidth=0.25, relheight=0.15)
+        frame_seccion.place(relx=0.11, rely=0.76, relwidth=0.25, relheight=0.15)
 
         # Título de la sección
         titulo_label = tk.Label(frame_seccion, text=titulo, font=("Arial", 10), bg=COLOR_FONDO, fg=COLOR_TITULO)
@@ -550,10 +582,7 @@ def casos_de_uso():
             total += sum(valor for _, _, valor in items)
         resultado_label.config(text=str(total))
 
-    def actualizar_suma(variables_valor, total_label, resultado_label):
-        suma_valores = sum(variable.get() for variable in variables_valor)
-        total_label.config(text=str(suma_valores))
-        resultado_label.config(text=f"Total de Puntos de Función: {suma_valores}")
+    
 
     def actualizar_total_final():
         total = 0
@@ -567,11 +596,12 @@ def casos_de_uso():
 
     #----------------------------------------------------------------
 
-    table_frame_entradas, itemsEntradas = crear_cuadro("Actores", 0.11, 0.01, 3, 4, 6)
-    table_frame_salidas, itemsSalidas = crear_cuadro("Casos de Usos", 0.11, 0.31, 4, 5, 7)
+    table_frame_entradas, itemsEntradas = crear_cuadro("Actores", 0.11, 0.01, 1, 2, 3)
+    table_frame_salidas, itemsSalidas = crear_cuadro("Casos de Usos", 0.11, 0.31, 5, 10, 15)
    
 
-    crear_seccion(0.36, 0.01)
+    crear_seccion(0.36, 0.01, factores_tecnicos)
+    crear_seccion(0.36, 0.71, factores_ambientales)
 
     _, resultado_label = crear_seccion_resultado("Conteo Total")
 
