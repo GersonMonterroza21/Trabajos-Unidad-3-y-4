@@ -322,9 +322,9 @@ def casos_de_uso():
     # Variable de control
     variables_valor = []
 
-    def crear_cuadro(titulo_tabla, x, y, simple, medio, complejo):
+    def crear_cuadro(titulo_tabla, x, y, simple, medio, complejo, ancho, largo):
         frame_cuadro = tk.Frame(root, borderwidth=2, relief=COLOR_BORDE, bg=COLOR_FONDO)
-        frame_cuadro.place(relx=x, rely=y, relwidth=0.25, relheight=0.3)
+        frame_cuadro.place(relx=x, rely=y, relwidth=ancho, relheight=largo)
 
         # Lista para almacenar los ítems (nombre, tipo, valor)
         nombre_tabla = []
@@ -486,9 +486,9 @@ def casos_de_uso():
         }
 
 
-    def crear_seccion(x, y, factores):
+    def crear_seccion(x, y, factores, ancho, largo):
         frame_seccion = tk.Frame(root, borderwidth=2, relief=COLOR_BORDE, bg=COLOR_FONDO)
-        frame_seccion.place(relx=x, rely=y, relwidth=0.5, relheight=0.70)
+        frame_seccion.place(relx=x, rely=y, relwidth=ancho, relheight=largo)
 
         # Crear un Frame para la tabla dentro de la sección
         table_frame = tk.Frame(frame_seccion, bg=COLOR_FONDO)
@@ -499,9 +499,9 @@ def casos_de_uso():
 
         tk.Label(table_frame, text="Factor", borderwidth=1, font=("Arial", 8, "bold"), relief=COLOR_BORDE_INTERNO, width=5, bg=COLOR_ETIQUETA).grid(row=0, column=0, sticky="nsew")
         tk.Label(table_frame, text="Descripción", borderwidth=1, font=("Arial", 8, "bold"), relief=COLOR_BORDE_INTERNO, width=40, bg=COLOR_ETIQUETA).grid(row=0, column=1, sticky="nsew")
-        tk.Label(table_frame, text="Peso", borderwidth=1, font=("Arial", 8, "bold"), relief=COLOR_BORDE_INTERNO, width=10, bg=COLOR_ETIQUETA).grid(row=0, column=2, sticky="nsew")
-        tk.Label(table_frame, text="Estimación", borderwidth=1, font=("Arial", 8, "bold"), relief=COLOR_BORDE_INTERNO, width=10, bg=COLOR_ETIQUETA).grid(row=0, column=3, sticky="nsew")
-        tk.Label(table_frame, text="Total", borderwidth=1, font=("Arial", 8, "bold"), relief=COLOR_BORDE_INTERNO, width=10, bg=COLOR_ETIQUETA).grid(row=0, column=4, sticky="nsew")
+        tk.Label(table_frame, text="Peso", borderwidth=1, font=("Arial", 8, "bold"), relief=COLOR_BORDE_INTERNO, width=8, bg=COLOR_ETIQUETA).grid(row=0, column=2, sticky="nsew")
+        tk.Label(table_frame, text="Estimación", borderwidth=1, font=("Arial", 8, "bold"), relief=COLOR_BORDE_INTERNO, width=7, bg=COLOR_ETIQUETA).grid(row=0, column=3, sticky="nsew")
+        tk.Label(table_frame, text="Total", borderwidth=1, font=("Arial", 8, "bold"), relief=COLOR_BORDE_INTERNO, width=7, bg=COLOR_ETIQUETA).grid(row=0, column=4, sticky="nsew")
 
         # Lista para almacenar las variables de control y las etiquetas de total
         variables_valor = []
@@ -513,14 +513,14 @@ def casos_de_uso():
             # Crear y posicionar las etiquetas y menús desplegables
             tk.Label(table_frame, text=f"T{conteo + 1}", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=5, bg=COLOR_ETIQUETA).grid(row=conteo + 1, column=0, sticky="nsew")
             tk.Label(table_frame, text=factor, borderwidth=1, relief=COLOR_BORDE_INTERNO, width=40, bg=COLOR_ETIQUETA).grid(row=conteo + 1, column=1, sticky="nsew")
-            tk.Label(table_frame, text=peso, borderwidth=1, relief=COLOR_BORDE_INTERNO, width=10, bg=COLOR_ETIQUETA).grid(row=conteo + 1, column=2, sticky="nsew")
+            tk.Label(table_frame, text=peso, borderwidth=1, relief=COLOR_BORDE_INTERNO, width=8, bg=COLOR_ETIQUETA).grid(row=conteo + 1, column=2, sticky="nsew")
             valor_var = tk.IntVar(value=0)  # Valor inicial en 0
             valor_menu = tk.OptionMenu(table_frame, valor_var, *range(6))  # Menú desplegable de 0 a 5
             valor_menu.grid(row=conteo + 1, column=3, sticky="nsew")
             variables_valor.append(valor_var)  # Almacenar la variable de control en la lista
 
             # Crear y almacenar la etiqueta para la columna "Total"
-            total_label = tk.Label(table_frame, text="0", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=10, bg=COLOR_ETIQUETA)
+            total_label = tk.Label(table_frame, text="0", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=7, bg=COLOR_ETIQUETA)
             total_label.grid(row=conteo + 1, column=4, sticky="nsew")
             total_labels.append(total_label)
 
@@ -542,9 +542,9 @@ def casos_de_uso():
 
 
     # ------------------------------------------------------------------------------------------
-    def crear_seccion_resultado(titulo):
+    def crear_seccion_resultado(titulo, x, y, ancho, largo):
         frame_seccion = tk.Frame(root, borderwidth=2, relief=COLOR_BORDE, bg=COLOR_FONDO)
-        frame_seccion.place(relx=0.11, rely=0.61, relwidth=0.25, relheight=0.15)
+        frame_seccion.place(relx=x, rely=y, relwidth=ancho, relheight=largo)
 
         # Título de la sección
         titulo_label = tk.Label(frame_seccion, text=titulo, font=("Arial", 10), bg=COLOR_FONDO, fg=COLOR_TITULO)
@@ -559,9 +559,9 @@ def casos_de_uso():
     #---------------------------------------------------------------------------------------------
 
 
-    def crear_seccion_calculo(titulo):
+    def crear_seccion_calculo(titulo, x, y, ancho, largo):
         frame_seccion = tk.Frame(root, borderwidth=2, relief=COLOR_BORDE, bg=COLOR_FONDO)
-        frame_seccion.place(relx=0.11, rely=0.76, relwidth=0.25, relheight=0.15)
+        frame_seccion.place(relx=x, rely=y, relwidth=ancho, relheight=largo)
 
         # Título de la sección
         titulo_label = tk.Label(frame_seccion, text=titulo, font=("Arial", 10), bg=COLOR_FONDO, fg=COLOR_TITULO)
@@ -596,18 +596,18 @@ def casos_de_uso():
 
     #----------------------------------------------------------------
 
-    table_frame_entradas, itemsEntradas = crear_cuadro("Actores", 0.11, 0.01, 1, 2, 3)
-    table_frame_salidas, itemsSalidas = crear_cuadro("Casos de Usos", 0.11, 0.31, 5, 10, 15)
+    table_frame_entradas, itemsEntradas = crear_cuadro("Actores", 0.11, 0.01, 1, 2, 3, 0.25, 0.3)
+    table_frame_salidas, itemsSalidas = crear_cuadro("Casos de Usos", 0.36, 0.01, 5, 10, 15, 0.25, 0.3)
    
 
-    crear_seccion(0.36, 0.01, factores_tecnicos)
-    crear_seccion(0.36, 0.71, factores_ambientales)
+    crear_seccion(0.11, 0.25, factores_tecnicos, 0.45, 0.68)
+    crear_seccion(0.56, 0.25, factores_ambientales, 0.45, 0.5)
 
-    _, resultado_label = crear_seccion_resultado("Conteo Total")
+    _, resultado_label = crear_seccion_resultado("Conteo Total", 0.66, 0.06, 0.25, 0.15)
 
 
     # Crear la sección de cálculo una vez
-    _, valor_resultado = crear_seccion_calculo("Puntos de Función Ajustados")
+    _, valor_resultado = crear_seccion_calculo("Puntos de Función Ajustados", 0.71, 0.80, 0.25, 0.15)
 
 
     # Mostrar la tabla inicialmente
