@@ -37,7 +37,7 @@ COCOMO_CONSTANTS = {
 }
 
 # Constantes del modelo COCOMO II
-B = 0.91
+B = 1.01
 A = 2.94
 
 def calcular_esfuerzo():
@@ -70,32 +70,35 @@ def clear_form2():
 
 def show_form1():
     clear_frame()
-    tk.Label(main_frame, text="Estimación de costos con COCOMO", font=('Helvetica', 14, 'bold')).grid(row=0, columnspan=2, pady=10)
-    
-    tk.Label(main_frame, text="Tamaño del proyecto (KLOC):").grid(row=1, column=0, pady=5)
-    global entry_kloc1
-    entry_kloc1 = tk.Entry(main_frame)
-    entry_kloc1.grid(row=1, column=1, pady=5)
+    title_frame = ttk.LabelFrame(main_frame, text="Estimación de costos con COCOMO", padding="10 10 10 10", style="Custom.TLabelframe")
+    title_frame.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky="ew")
 
-    tk.Label(main_frame, text="Tipo de proyecto:").grid(row=2, column=0, pady=5)
+    tk.Label(title_frame, text="Tamaño del proyecto (KLOC):", font=('Helvetica', 12)).grid(row=1, column=0, pady=5, sticky="e")
+    global entry_kloc1
+    entry_kloc1 = ttk.Entry(title_frame, font=('Helvetica', 12))
+    entry_kloc1.grid(row=1, column=1, pady=5, sticky="w")
+
+    tk.Label(title_frame, text="Tipo de proyecto:", font=('Helvetica', 12)).grid(row=2, column=0, pady=5, sticky="e")
     global combobox_type
-    combobox_type = ttk.Combobox(main_frame, values=["Orgánico", "Semi-Integrado", "Empotrado"])
-    combobox_type.grid(row=2, column=1, pady=5)
+    combobox_type = ttk.Combobox(title_frame, values=["Orgánico", "Semi-Integrado", "Empotrado"], font=('Helvetica', 12))
+    combobox_type.grid(row=2, column=1, pady=5, sticky="w")
     combobox_type.set("Orgánico")  # Valor por defecto
     
-    button_calcular = ttk.Button(main_frame, text="Calcular", command=calculate_cocomo1)
-    button_calcular.grid(row=3, column=0, pady=10, padx=(0, 5))
+    button_calcular = ttk.Button(title_frame, text="Calcular", command=calculate_cocomo1, style="Custom.TButton")
+    button_calcular.grid(row=3, column=0, pady=10, padx=(0, 5), sticky="e")
 
-    button_limpiar = ttk.Button(main_frame, text="Limpiar Campos", command=clear_form1)
-    button_limpiar.grid(row=3, column=1, pady=10, padx=(5, 0))
+    button_limpiar = ttk.Button(title_frame, text="Limpiar Campos", command=clear_form1, style="Custom.TButton")
+    button_limpiar.grid(row=3, column=1, pady=10, padx=(5, 0), sticky="w")
 
+    result_frame = ttk.LabelFrame(main_frame, text="Resultados", padding="10 10 10 10", style="Custom.TLabelframe")
+    result_frame.grid(row=1, column=0, columnspan=2, padx=10, pady=10, sticky="ew")
    
     global label_result_effort1
     global label_result_time1
-    label_result_effort1 = tk.Label(main_frame, text="Esfuerzo estimado: ")
-    label_result_effort1.grid(row=5, columnspan=2, pady=5)
-    label_result_time1 = tk.Label(main_frame, text="Tiempo de desarrollo: ")
-    label_result_time1.grid(row=6, columnspan=2, pady=5)
+    label_result_effort1 = ttk.Label(result_frame, text="Esfuerzo estimado: ", font=('Helvetica', 12))
+    label_result_effort1.grid(row=0, column=0, pady=5, sticky="w")
+    label_result_time1 = ttk.Label(result_frame, text="Tiempo de desarrollo: ", font=('Helvetica', 12))
+    label_result_time1.grid(row=1, column=0, pady=5, sticky="w")
 
 def calculate_cocomo1():
     try:
@@ -124,34 +127,34 @@ def clear_form1():
 def show_form2():
     clear_frame()
     
-    tk.Label(main_frame, text="Calculadora COCOMO II", font=('Helvetica', 14, 'bold')).grid(row=0, columnspan=2, pady=10)
+    tk.Label(main_frame, text="COCOMO II", font=('Helvetica', 16, 'bold'), bg='#F0F8FF').grid(row=0, columnspan=3, pady=10)
     
     # Frame para KLOC
-    frame_kloc = ttk.Frame(main_frame, padding="10 10 10 10")
-    frame_kloc.grid(row=1, column=0, columnspan=2, padx=10, pady=10, sticky="ew")
-    ttk.Label(frame_kloc, text="Ingrese el número de KLOC:").grid(column=0, row=0, padx=5, pady=5, sticky="e")
+    frame_kloc = ttk.Frame(main_frame, padding="10 10 10 10", style="Custom.TFrame")
+    frame_kloc.grid(row=1, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
+    ttk.Label(frame_kloc, text="Ingrese el número de KLOC:", font=('Helvetica', 12)).grid(column=0, row=0, padx=5, pady=5, sticky="e")
     global entry_kloc
-    entry_kloc = ttk.Entry(frame_kloc)
+    entry_kloc = ttk.Entry(frame_kloc, font=('Helvetica', 12))
     entry_kloc.grid(column=1, row=0, padx=5, pady=5, sticky="w")
 
     # Frame para los factores de escala
-    frame_escala = ttk.LabelFrame(main_frame, text="Factores de Escala", padding="10 10 10 10")
+    frame_escala = ttk.LabelFrame(main_frame, text="Factores de Escala", padding="10 10 10 10", style="Custom.TLabelframe")
     frame_escala.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
     global entry_vars
     entry_vars = {}
 
     for i, factor in enumerate(factores_escala):
-        ttk.Label(frame_escala, text=factor).grid(column=0, row=i, padx=5, pady=5, sticky="e")
+        ttk.Label(frame_escala, text=factor, font=('Helvetica', 12)).grid(column=0, row=i, padx=5, pady=5, sticky="e")
         entry_vars[factor] = tk.StringVar(value="1.00")
-        entry = ttk.Entry(frame_escala, textvariable=entry_vars[factor])
+        entry = ttk.Entry(frame_escala, textvariable=entry_vars[factor], font=('Helvetica', 12))
         entry.grid(column=1, row=i, padx=5, pady=5, sticky="w")
 
     # Frame para los multiplicadores de esfuerzo
-    frame_esfuerzo1 = ttk.LabelFrame(main_frame, text="Multiplicadores de Esfuerzo (Parte 1)", padding="10 10 10 10")
+    frame_esfuerzo1 = ttk.LabelFrame(main_frame, text="Multiplicadores de Esfuerzo ", padding="10 10 10 10", style="Custom.TLabelframe")
     frame_esfuerzo1.grid(row=2, column=1, padx=10, pady=10, sticky="nsew")
 
     # Frame para los multiplicadores de esfuerzo (segunda parte)
-    frame_esfuerzo2 = ttk.LabelFrame(main_frame, text="Multiplicadores de Esfuerzo (Parte 2)", padding="10 10 10 10")
+    frame_esfuerzo2 = ttk.LabelFrame(main_frame, text="Multiplicadores de Esfuerzo ", padding="10 10 10 10", style="Custom.TLabelframe")
     frame_esfuerzo2.grid(row=2, column=2, padx=10, pady=10, sticky="nsew")
 
     # Separar los multiplicadores en dos grupos
@@ -161,37 +164,37 @@ def show_form2():
     multiplicadores_esfuerzo2 = multiplicadores_keys[mid:]
 
     for i, factor in enumerate(multiplicadores_esfuerzo1):
-        ttk.Label(frame_esfuerzo1, text=factor).grid(column=0, row=i, padx=5, pady=5, sticky="e")
+        ttk.Label(frame_esfuerzo1, text=factor, font=('Helvetica', 12)).grid(column=0, row=i, padx=5, pady=5, sticky="e")
         entry_vars[factor] = tk.StringVar(value="1.00")
-        entry = ttk.Entry(frame_esfuerzo1, textvariable=entry_vars[factor])
+        entry = ttk.Entry(frame_esfuerzo1, textvariable=entry_vars[factor], font=('Helvetica', 12))
         entry.grid(column=1, row=i, padx=5, pady=5, sticky="w")
 
     for i, factor in enumerate(multiplicadores_esfuerzo2):
-        ttk.Label(frame_esfuerzo2, text=factor).grid(column=0, row=i, padx=5, pady=5, sticky="e")
+        ttk.Label(frame_esfuerzo2, text=factor, font=('Helvetica', 12)).grid(column=0, row=i, padx=5, pady=5, sticky="e")
         entry_vars[factor] = tk.StringVar(value="1.00")
-        entry = ttk.Entry(frame_esfuerzo2, textvariable=entry_vars[factor])
+        entry = ttk.Entry(frame_esfuerzo2, textvariable=entry_vars[factor], font=('Helvetica', 12))
         entry.grid(column=1, row=i, padx=5, pady=5, sticky="w")
 
     # Botones para calcular el esfuerzo y limpiar campos
-    button_frame = ttk.Frame(main_frame)
+    button_frame = ttk.Frame(main_frame, style="Custom.TFrame")
     button_frame.grid(row=3, column=0, columnspan=3, pady=10)
 
-    button_calcular = ttk.Button(button_frame, text="Calcular Esfuerzo", command=calcular_esfuerzo)
+    button_calcular = ttk.Button(button_frame, text="Calcular Esfuerzo", command=calcular_esfuerzo, style="Custom.TButton")
     button_calcular.pack(side=tk.LEFT, padx=5)
 
-    button_limpiar = ttk.Button(button_frame, text="Limpiar Campos", command=clear_form2)
+    button_limpiar = ttk.Button(button_frame, text="Limpiar Campos", command=clear_form2, style="Custom.TButton")
     button_limpiar.pack(side=tk.LEFT, padx=5)
 
     # Etiqueta para mostrar el resultado
     global label_result
-    label_result = ttk.Label(main_frame, text="Esfuerzo estimado: ")
+    label_result = ttk.Label(main_frame, text="Esfuerzo estimado: ", font=('Helvetica', 12), background='#F0F8FF')
     label_result.grid(row=4, column=0, columnspan=3, padx=10, pady=10)
 
 
 def show_form3():
     clear_frame()
-    tk.Label(main_frame, text="Cerrar Programa", font=('Helvetica', 14, 'bold')).grid(row=0, columnspan=3, pady=10)
-    tk.Button(main_frame, text="Cerrar", command=close_app).grid(row=1, columnspan=3, pady=10)
+    tk.Label(main_frame, text="Cerrar Programa", font=('Helvetica', 16, 'bold'), bg='#F0F8FF').grid(row=0, columnspan=3, pady=10)
+    ttk.Button(main_frame, text="Cerrar", command=close_app, style="Custom.TButton").grid(row=1, columnspan=3, pady=10)
 
 def close_app():
     root.quit()
@@ -202,25 +205,33 @@ def clear_frame():
 
 # Crear la ventana principal
 root = tk.Tk()
-root.title("Aplicación con Menú Profesional")
-root.geometry("1000x600")
+root.title("Trabajo de unidad 4")
+root.geometry("1200x600")
+
+# Aplicar estilo personalizado
+style = ttk.Style()
+style.configure("TFrame", background="#F0F8FF")
+style.configure("TLabel", background="#F0F8FF", font=('Helvetica', 12))
+style.configure("TButton", font=('Helvetica', 12))
+style.configure("TLabelframe", background="#F0F8FF", font=('Helvetica', 12))
+style.configure("TLabelframe.Label", font=('Helvetica', 14, 'bold'))
 
 # Crear un frame para los botones del menú
-menu_frame = tk.Frame(root, bg='lightgrey', width=150)
-menu_frame.pack(side=tk.LEFT, fill=tk.Y)
+menu_frame = tk.Frame(root, bg='lightgrey', width=200, height=800)
+menu_frame.pack(side='left', fill='y')
 
 # Crear un frame principal donde se mostrarán los formularios
-main_frame = tk.Frame(root, bg='white')
+main_frame = ttk.Frame(root, style="TFrame")
 main_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
 # Crear y colocar los botones del menú en el frame del menú
-button_form1 = tk.Button(menu_frame, text="COCOMO", command=show_form1)
+button_form1 = ttk.Button(menu_frame, text="COCOMO", command=show_form1, style="TButton")
 button_form1.pack(fill=tk.X, padx=10, pady=10)
 
-button_form2 = tk.Button(menu_frame, text="COCOMO II", command=show_form2)
+button_form2 = ttk.Button(menu_frame, text="COCOMO II", command=show_form2, style="TButton")
 button_form2.pack(fill=tk.X, padx=10, pady=10)
 
-button_form3 = tk.Button(menu_frame, text="Cerrar Programa", command=show_form3)
+button_form3 = ttk.Button(menu_frame, text="Cerrar Programa", command=close_app, style="TButton")
 button_form3.pack(fill=tk.X, padx=10, pady=10)
 
 # Iniciar con el primer formulario visible
@@ -228,3 +239,4 @@ show_form1()
 
 # Iniciar el bucle principal de la ventana
 root.mainloop()
+
