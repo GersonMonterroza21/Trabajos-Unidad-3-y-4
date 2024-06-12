@@ -83,13 +83,13 @@ def puntos_de_funcion():
             if nombre:
                 valor = simple if tipo == "Simple" else (medio if tipo == "Medio" else complejo)
                 nombre_tabla.append((nombre, tipo, valor))
-                actualizar_tabla(table_frame, nombre_tabla)
+                actualizar_tabla(table_frame, nombre_tabla, simple, medio, complejo)
                 actualizar_total()
                 popup.destroy()
 
         tk.Button(popup, text="Guardar", command=guardar_item).grid(row=2, columnspan=2, pady=10)
 
-    def editar_item(table_frame, idx, nombre_tabla):
+    def editar_item(table_frame, idx, nombre_tabla, medio, simple, complejo):
         item = nombre_tabla[idx - 1]  # Obtenemos el elemento correspondiente al índice
         nombre_antiguo, tipo_antiguo, _ = item  # Desempaquetamos el elemento
 
@@ -113,20 +113,20 @@ def puntos_de_funcion():
             nombre_nuevo = nombre_entry.get()
             tipo_nuevo = tipo_var.get()
             if nombre_nuevo:
-                valor_nuevo = 3 if tipo_nuevo == "Simple" else (4 if tipo_nuevo == "Medio" else 6)
+                valor_nuevo = simple if tipo_nuevo == "Simple" else (medio if tipo_nuevo == "Medio" else complejo)
                 nombre_tabla[idx - 1] = (nombre_nuevo, tipo_nuevo, valor_nuevo) # Actualizar la lista con los nuevos valores
-                actualizar_tabla(table_frame, nombre_tabla)
+                actualizar_tabla(table_frame, nombre_tabla, simple, medio, complejo)
                 actualizar_total()
                 popup.destroy()
 
         tk.Button(popup, text="Guardar", command=guardar_edicion).grid(row=2, columnspan=2, pady=10)
 
-    def eliminar_item(table_frame, idx, nombre_tabla):
+    def eliminar_item(table_frame, idx, nombre_tabla, simple, medio, complejo):
         del nombre_tabla[idx - 1]  # Restamos 1 porque el índice del widget comienza en 1, pero en la lista comienza en 0
-        actualizar_tabla(table_frame, nombre_tabla)
+        actualizar_tabla(table_frame, nombre_tabla, simple, medio, complejo)
         actualizar_total()
 
-    def actualizar_tabla(table_frame, nombre_tabla):
+    def actualizar_tabla(table_frame, nombre_tabla, simple, medio, complejo):
         # Limpiar la tabla
         for widget in table_frame.winfo_children():
             widget.destroy()
@@ -144,9 +144,9 @@ def puntos_de_funcion():
             tk.Label(table_frame, text=tipo, borderwidth=1, relief=COLOR_BORDE_INTERNO, width=8).grid(row=i, column=1, sticky="nsew")
             tk.Label(table_frame, text=valor, borderwidth=1, relief=COLOR_BORDE_INTERNO, width=8).grid(row=i, column=2, sticky="nsew")
             # Botones para editar y eliminar el ítem
-            editar_button = tk.Button(table_frame, text="Editar", command=lambda idx=i: editar_item(table_frame, idx, nombre_tabla))
+            editar_button = tk.Button(table_frame, text="Editar", command=lambda idx=i: editar_item(table_frame, idx, nombre_tabla, simple, medio, complejo))
             editar_button.grid(row=i, column=3)
-            eliminar_button = tk.Button(table_frame, text="Eliminar", command=lambda idx=i: eliminar_item(table_frame, idx, nombre_tabla))
+            eliminar_button = tk.Button(table_frame, text="Eliminar", command=lambda idx=i: eliminar_item(table_frame, idx, nombre_tabla, simple, medio, complejo))
             eliminar_button.grid(row=i, column=4)
 
             contador += valor
