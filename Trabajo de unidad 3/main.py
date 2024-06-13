@@ -5,6 +5,7 @@ from tkinter import ttk
 root = tk.Tk()
 root.geometry("1200x800")  # Establecer las dimensiones de la root
 root.title("Aplicación con Menú")
+root.state('zoomed')
 
 # Crear un Frame para el menú lateral
 menu_frame = tk.Frame(root, bg='lightgrey', width=200, height=800)
@@ -315,12 +316,14 @@ def casos_de_uso():
     COLOR_BORDE_INTERNO = "solid"   # Solid
     COLOR_ETIQUETA = "#5499C7"      # Sky Blue
 
-    # contador
+    # contadores
     contador = 0
     contadorFilas = 0
 
-    # Variable de control
+    # Variables de control
     variables_valor = []
+    totalTecnico = 0
+    totalAmbiente = 0
 
     def crear_cuadro(titulo_tabla, x, y, simple, medio, complejo, ancho, largo):
         frame_cuadro = tk.Frame(root, borderwidth=2, relief=COLOR_BORDE, bg=COLOR_FONDO)
@@ -369,13 +372,13 @@ def casos_de_uso():
             if nombre:
                 valor = simple if tipo == "Simple" else (medio if tipo == "Medio" else complejo)
                 nombre_tabla.append((nombre, tipo, valor))
-                actualizar_tabla(table_frame, nombre_tabla)
+                actualizar_tabla(table_frame, nombre_tabla, simple, medio, complejo)
                 actualizar_total()
                 popup.destroy()
 
         tk.Button(popup, text="Guardar", command=guardar_item).grid(row=2, columnspan=2, pady=10)
 
-    def editar_item(table_frame, idx, nombre_tabla):
+    def editar_item(table_frame, idx, nombre_tabla, simple, medio, complejo):
         item = nombre_tabla[idx - 1]  # Obtenemos el elemento correspondiente al índice
         nombre_antiguo, tipo_antiguo, _ = item  # Desempaquetamos el elemento
 
@@ -399,20 +402,20 @@ def casos_de_uso():
             nombre_nuevo = nombre_entry.get()
             tipo_nuevo = tipo_var.get()
             if nombre_nuevo:
-                valor_nuevo = 3 if tipo_nuevo == "Simple" else (4 if tipo_nuevo == "Medio" else 6)
+                valor_nuevo = simple if tipo_nuevo == "Simple" else (medio if tipo_nuevo == "Medio" else complejo)
                 nombre_tabla[idx - 1] = (nombre_nuevo, tipo_nuevo, valor_nuevo) # Actualizar la lista con los nuevos valores
-                actualizar_tabla(table_frame, nombre_tabla)
+                actualizar_tabla(table_frame, nombre_tabla, simple, medio, complejo)
                 actualizar_total()
                 popup.destroy()
 
         tk.Button(popup, text="Guardar", command=guardar_edicion).grid(row=2, columnspan=2, pady=10)
 
-    def eliminar_item(table_frame, idx, nombre_tabla):
+    def eliminar_item(table_frame, idx, nombre_tabla, simple, medio, complejo):
         del nombre_tabla[idx - 1]  # Restamos 1 porque el índice del widget comienza en 1, pero en la lista comienza en 0
-        actualizar_tabla(table_frame, nombre_tabla)
+        actualizar_tabla(table_frame, nombre_tabla, simple, medio, complejo)
         actualizar_total()
 
-    def actualizar_tabla(table_frame, nombre_tabla):
+    def actualizar_tabla(table_frame, nombre_tabla, simple, medio, complejo):
         # Limpiar la tabla
         for widget in table_frame.winfo_children():
             widget.destroy()
@@ -420,7 +423,7 @@ def casos_de_uso():
         # Títulos de la tabla
         tk.Label(table_frame, text="Nombre", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=10, bg=COLOR_ETIQUETA).grid(row=0, column=0, sticky="nsew")
         tk.Label(table_frame, text="Tipo", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=8, bg=COLOR_ETIQUETA).grid(row=0, column=1, sticky="nsew")
-        tk.Label(table_frame, text="Valor", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=8, bg=COLOR_ETIQUETA).grid(row=0, column=2, sticky="nsew")
+        tk.Label(table_frame, text="Valor", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=4, bg=COLOR_ETIQUETA).grid(row=0, column=2, sticky="nsew")
 
         # Agregar datos a la tabla
         contador = 0
@@ -428,11 +431,11 @@ def casos_de_uso():
         for i, (nombre, tipo, valor) in enumerate(nombre_tabla, start=1):
             tk.Label(table_frame, text=nombre, borderwidth=1, relief=COLOR_BORDE_INTERNO, width=10).grid(row=i, column=0, sticky="nsew")
             tk.Label(table_frame, text=tipo, borderwidth=1, relief=COLOR_BORDE_INTERNO, width=8).grid(row=i, column=1, sticky="nsew")
-            tk.Label(table_frame, text=valor, borderwidth=1, relief=COLOR_BORDE_INTERNO, width=8).grid(row=i, column=2, sticky="nsew")
+            tk.Label(table_frame, text=valor, borderwidth=1, relief=COLOR_BORDE_INTERNO, width=4).grid(row=i, column=2, sticky="nsew")
             # Botones para editar y eliminar el ítem
-            editar_button = tk.Button(table_frame, text="Editar", command=lambda idx=i: editar_item(table_frame, idx, nombre_tabla))
+            editar_button = tk.Button(table_frame, text="Editar", command=lambda idx=i: editar_item(table_frame, idx, nombre_tabla, simple, medio, complejo))
             editar_button.grid(row=i, column=3)
-            eliminar_button = tk.Button(table_frame, text="Eliminar", command=lambda idx=i: eliminar_item(table_frame, idx, nombre_tabla))
+            eliminar_button = tk.Button(table_frame, text="Eliminar", command=lambda idx=i: eliminar_item(table_frame, idx, nombre_tabla, simple, medio, complejo))
             eliminar_button.grid(row=i, column=4)
 
             contador += valor
@@ -441,21 +444,30 @@ def casos_de_uso():
         # Fila del total
         tk.Label(table_frame, text="TOTAL", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=10, bg=COLOR_ETIQUETA).grid(row=contadorFilas + 1, column=0, sticky="nsew")
         tk.Label(table_frame, text="", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=8, bg=COLOR_ETIQUETA).grid(row=contadorFilas + 1, column=1, sticky="nsew")
-        tk.Label(table_frame, text=contador, borderwidth=1, relief=COLOR_BORDE_INTERNO, width=8, bg=COLOR_ETIQUETA).grid(row=contadorFilas + 1, column=2, sticky="nsew")
+        tk.Label(table_frame, text=contador, borderwidth=1, relief=COLOR_BORDE_INTERNO, width=4, bg=COLOR_ETIQUETA).grid(row=contadorFilas + 1, column=2, sticky="nsew")
 
 
     # ----------------------------------------------------------------------------------------
     # Crear un Frame para la sección que ocupe el 40% del tamaño de la root
 
-    def actualizar_suma(variables_valor, total_labels, total_label, resultado_label, factores):
-        total_general = 0
+    def actualizar_suma(variables_valor, total_labels, total_label, resultado_label, factores, nombre_total):
+        global totalTecnico
+        global totalAmbiente
+        total_general_Uno = 0
+        total_general_Dos = 0
         for i, var in enumerate(variables_valor):
             peso = list(factores.values())[i]
             total = var.get() * peso
             total_labels[i].config(text=str(total))
-            total_general += total
-        total_label.config(text=str(total_general))
-        resultado_label.config(text=f"Total de Factores Técnicos: {total_general}")
+            total_general_Uno += total
+        if nombre_total == "Factor Técnico":
+            total_general_Dos = round(0.6+(0.01*total_general_Uno),2)
+            totalTecnico = total_general_Dos
+        else:
+            total_general_Dos = round(1.4 - (0.03*total_general_Uno),2)
+            totalAmbiente = total_general_Dos
+        total_label.config(text=str(total_general_Uno))
+        resultado_label.config(text=f"{nombre_total}: {total_general_Dos}")
     
     #Arreglo de los factores Técnicos
     factores_tecnicos = {
@@ -486,7 +498,7 @@ def casos_de_uso():
         }
 
 
-    def crear_seccion(x, y, factores, ancho, largo):
+    def crear_seccion(x, y, factores, ancho, largo, nombre_total):
         frame_seccion = tk.Frame(root, borderwidth=2, relief=COLOR_BORDE, bg=COLOR_FONDO)
         frame_seccion.place(relx=x, rely=y, relwidth=ancho, relheight=largo)
 
@@ -525,7 +537,7 @@ def casos_de_uso():
             total_labels.append(total_label)
 
             # Vincular la actualización de la suma a cambios en el menú desplegable
-            valor_var.trace_add("write", lambda name, index, mode, var=valor_var, peso=peso, i=conteo: actualizar_suma(variables_valor, total_labels, total_label_general, resultado_label, factores))
+            valor_var.trace_add("write", lambda name, index, mode, var=valor_var, peso=peso, i=conteo: actualizar_suma(variables_valor, total_labels, total_label_general, resultado_label, factores, nombre_total))
 
             conteo += 1
 
@@ -535,10 +547,10 @@ def casos_de_uso():
         total_label_general.grid(row=conteo + 1, column=4, sticky="nsew")
 
         # Resultado final debajo de la tabla
-        resultado_label = tk.Label(frame_seccion, text="Total de Factores Técnicos: 0", font=("Arial", 10, "bold"), bg=COLOR_FONDO)
+        resultado_label = tk.Label(frame_seccion, text=f"{nombre_total}: 0", font=("Arial", 10, "bold"), bg=COLOR_FONDO)
         resultado_label.pack(pady=(10, 0))
 
-        actualizar_suma(variables_valor, total_labels, total_label_general, resultado_label, factores)
+        actualizar_suma(variables_valor, total_labels, total_label_general, resultado_label, factores, nombre_total)
 
 
     # ------------------------------------------------------------------------------------------
@@ -585,34 +597,35 @@ def casos_de_uso():
     
 
     def actualizar_total_final():
-        total = 0
+        global totalTecnico
+        global totalAmbiente
+        puntosSinAjustar = 0
         for items in [itemsEntradas, itemsSalidas]:
-            total += sum(valor for _, _, valor in items)
-        suma_valores = sum(variable.get() for variable in variables_valor)
-        puntos_ajustados = round(total * (0.65 + (0.01 * suma_valores)), 2)
+            puntosSinAjustar += sum(valor for _, _, valor in items)
+        puntos_ajustados = round(puntosSinAjustar*totalTecnico*totalAmbiente, 2)
         valor_resultado.config(text=str(puntos_ajustados))
 
         root.after(100, actualizar_total_final)
 
     #----------------------------------------------------------------
 
-    table_frame_entradas, itemsEntradas = crear_cuadro("Actores", 0.11, 0.01, 1, 2, 3, 0.25, 0.3)
-    table_frame_salidas, itemsSalidas = crear_cuadro("Casos de Usos", 0.36, 0.01, 5, 10, 15, 0.25, 0.3)
+    table_frame_entradas, itemsEntradas = crear_cuadro("Actores", 0.11, 0.73, 1, 2, 3, 0.22, 0.3)
+    table_frame_salidas, itemsSalidas = crear_cuadro("Casos de Usos", 0.33, 0.73, 5, 10, 15, 0.22, 0.3)
    
 
-    crear_seccion(0.11, 0.25, factores_tecnicos, 0.45, 0.68)
-    crear_seccion(0.56, 0.25, factores_ambientales, 0.45, 0.5)
+    crear_seccion(0.11, 0.01, factores_tecnicos, 0.45, 0.72, "Factor Técnico")
+    crear_seccion(0.56, 0.01, factores_ambientales, 0.45, 0.5, "Factor Ambiental")
 
-    _, resultado_label = crear_seccion_resultado("Conteo Total", 0.66, 0.06, 0.25, 0.15)
+    _, resultado_label = crear_seccion_resultado("Puntos de Casos de Uso sin Ajustar", 0.66, 0.51, 0.25, 0.15)
 
 
     # Crear la sección de cálculo una vez
-    _, valor_resultado = crear_seccion_calculo("Puntos de Función Ajustados", 0.71, 0.80, 0.25, 0.15)
+    _, valor_resultado = crear_seccion_calculo("Puntos de Casos de Usos Ajustados", 0.71, 0.80, 0.25, 0.15)
 
 
     # Mostrar la tabla inicialmente
-    actualizar_tabla(table_frame_entradas, itemsEntradas)
-    actualizar_tabla(table_frame_salidas, itemsSalidas)
+    actualizar_tabla(table_frame_entradas, itemsEntradas, 1, 2, 3)
+    actualizar_tabla(table_frame_salidas, itemsSalidas, 5, 10, 15)
 
     actualizar_total()
     actualizar_total_final()
