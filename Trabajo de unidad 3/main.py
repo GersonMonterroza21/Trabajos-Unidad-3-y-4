@@ -650,7 +650,31 @@ def puntos_objeto():
     cuadro.place(x=pos_x, y=pos_y)
 
 def mostrar_acerca_de():
-    content_label.config(text="Acerca de la Aplicación")
+    cambiar_estado_boton(btn_acerca_de)
+    # Crear la portada
+    portada_frame = tk.Frame(content_frame, bg='white', width=1000, height=800)
+    portada_frame.pack(fill='both', expand=True)
+
+    titulo_label = tk.Label(portada_frame, text="Software de la Unidad 3", font=('Helvetica', 36, 'bold'), bg='white')
+    titulo_label.pack(pady=40)
+
+    descripcion_texto = """
+    Se ha desarrollado todos los métodos y métricas vistas en clase
+    """
+
+    descripcion_label = tk.Label(portada_frame, text=descripcion_texto, font=('Helvetica', 18), bg='white', justify='left')
+    descripcion_label.pack(padx=100, pady=20)
+
+    equipo_texto = """
+    Desarrollado por:
+    - Jonathan Oswaldo Castaneda Fabián, CF2014
+    - Gerson Alexis Pérez Monterroza, 20072
+    """
+
+    equipo_label = tk.Label(portada_frame, text=equipo_texto, font=('Helvetica', 16), bg='white', justify='left')
+    equipo_label.pack(pady=20)
+
+
 
 # Botones del menú lateral
 btn_punto_funcion = tk.Button(menu_frame, text="Puntos de Función", command=puntos_de_funcion)
@@ -666,11 +690,12 @@ btn_acerca_de = tk.Button(menu_frame, text="Acerca de", command=mostrar_acerca_d
 btn_acerca_de.pack(fill='x')
 
 # Etiqueta para mostrar el contenido principal
-content_label = tk.Label(content_frame, text="Bienvenido", font=('Helvetica', 24), bg='white')
-content_label.pack(pady=20)
+#content_label = tk.Label(content_frame, text="Bienvenido", font=('Helvetica', 24), bg='white')
+#content_label.pack(pady=20)
 
 #Establece el primer boton como activo
 cambiar_estado_boton(btn_punto_funcion)
+mostrar_acerca_de()
 
 # Iniciar el bucle principal de la aplicación
 
