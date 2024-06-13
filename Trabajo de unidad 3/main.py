@@ -14,11 +14,18 @@ menu_frame.pack(side='left', fill='y')
 # Crear un Frame para el contenido principal
 content_frame = tk.Frame(root, bg='white', width=1000, height=800)
 content_frame.pack(side='right', fill='both', expand=True)
+#Funcion que controla la actividad de los botones
+def cambiar_estado_boton(boton_activado):
+    for boton in [btn_punto_funcion, btn_casos_usos, btn_punto_objeto, btn_acerca_de]:
+        boton.config(bg='SystemButtonFace')
+
+    boton_activado.config(bg='lightblue')
 
 # Funciones para los botones del menú
 def puntos_de_funcion():
+    cambiar_estado_boton(btn_punto_funcion)
     # Colores globales
-    cuadro = tk.Canvas(root, width=root.winfo_screenwidth() * 0.9, height=root.winfo_screenheight() * 1.0, bg="white")
+    cuadro = tk.Canvas(root, width=root.winfo_screenwidth() * 0.92, height=root.winfo_screenheight() * 1.0, bg="white")
     pos_x = root.winfo_screenwidth() * 0.08  # Posición x al 10% del ancho de la pantalla
     pos_y = root.winfo_screenheight() * 0.0  # Posición y al 10% del alto de la pantalla
     cuadro.place(x=pos_x, y=pos_y)
@@ -305,7 +312,9 @@ def puntos_de_funcion():
 
 
 def casos_de_uso():
-    cuadro = tk.Canvas(root, width=root.winfo_screenwidth() * 0.9, height=root.winfo_screenheight() * 1.0, bg="white")
+    cambiar_estado_boton(btn_casos_usos)
+
+    cuadro = tk.Canvas(root, width=root.winfo_screenwidth() * 0.92, height=root.winfo_screenheight() * 1.0, bg="white")
     pos_x = root.winfo_screenwidth() * 0.08  # Posición x al 10% del ancho de la pantalla
     pos_y = root.winfo_screenheight() * 0.0  # Posición y al 10% del alto de la pantalla
     cuadro.place(x=pos_x, y=pos_y)
@@ -632,21 +641,26 @@ def casos_de_uso():
 
 
 
-def mostrar_guardar():
-    content_label.config(text="Guardar Archivo")
+def puntos_objeto():
+    cambiar_estado_boton(btn_punto_objeto)
+
+    cuadro = tk.Canvas(root, width=root.winfo_screenwidth() * 0.92, height=root.winfo_screenheight() * 1.0, bg="white")
+    pos_x = root.winfo_screenwidth() * 0.08  # Posición x al 10% del ancho de la pantalla
+    pos_y = root.winfo_screenheight() * 0.0  # Posición y al 10% del alto de la pantalla
+    cuadro.place(x=pos_x, y=pos_y)
 
 def mostrar_acerca_de():
     content_label.config(text="Acerca de la Aplicación")
 
 # Botones del menú lateral
-btn_nuevo = tk.Button(menu_frame, text="Puntos de Función", command=puntos_de_funcion)
-btn_nuevo.pack(fill='x')
+btn_punto_funcion = tk.Button(menu_frame, text="Puntos de Función", command=puntos_de_funcion)
+btn_punto_funcion.pack(fill='x')
 
-btn_abrir = tk.Button(menu_frame, text="Casos de Uso", command=casos_de_uso)
-btn_abrir.pack(fill='x')
+btn_casos_usos = tk.Button(menu_frame, text="Casos de Uso", command=casos_de_uso)
+btn_casos_usos.pack(fill='x')
 
-btn_guardar = tk.Button(menu_frame, text="Guardar", command=mostrar_guardar)
-btn_guardar.pack(fill='x')
+btn_punto_objeto = tk.Button(menu_frame, text="Puntos Objeto", command=puntos_objeto)
+btn_punto_objeto.pack(fill='x')
 
 btn_acerca_de = tk.Button(menu_frame, text="Acerca de", command=mostrar_acerca_de)
 btn_acerca_de.pack(fill='x')
@@ -654,6 +668,9 @@ btn_acerca_de.pack(fill='x')
 # Etiqueta para mostrar el contenido principal
 content_label = tk.Label(content_frame, text="Bienvenido", font=('Helvetica', 24), bg='white')
 content_label.pack(pady=20)
+
+#Establece el primer boton como activo
+cambiar_estado_boton(btn_punto_funcion)
 
 # Iniciar el bucle principal de la aplicación
 
