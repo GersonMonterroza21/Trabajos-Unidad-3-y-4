@@ -62,13 +62,13 @@ def calcular_esfuerzo():
     except ValueError as e:
         messagebox.showerror("Error de entrada", str(e))
 
-def clear_form2():
+def limpiarccm2():
     entry_kloc.delete(0, tk.END)
     for var in entry_vars.values():
         var.set("1.00")
     label_result.config(text="Esfuerzo estimado: ")
 
-def show_form1():
+def mostrarccm1():
     clear_frame()
     title_frame = ttk.LabelFrame(main_frame, text="Estimación de costos con COCOMO", padding="10 10 10 10", style="Custom.TLabelframe")
     title_frame.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky="ew")
@@ -87,7 +87,7 @@ def show_form1():
     button_calcular = ttk.Button(title_frame, text="Calcular", command=calculate_cocomo1, style="Custom.TButton")
     button_calcular.grid(row=3, column=0, pady=10, padx=(0, 5), sticky="e")
 
-    button_limpiar = ttk.Button(title_frame, text="Limpiar Campos", command=clear_form1, style="Custom.TButton")
+    button_limpiar = ttk.Button(title_frame, text="Limpiar Campos", command=limpiarccm1, style="Custom.TButton")
     button_limpiar.grid(row=3, column=1, pady=10, padx=(5, 0), sticky="w")
 
     result_frame = ttk.LabelFrame(main_frame, text="Resultados", padding="10 10 10 10", style="Custom.TLabelframe")
@@ -118,13 +118,13 @@ def calculate_cocomo1():
     except ValueError:
         messagebox.showerror("Error", "Por favor, introduce un valor numérico válido para KLOC")
 
-def clear_form1():
+def limpiarccm1():
     entry_kloc1.delete(0, tk.END)
     combobox_type.set("Orgánico")
     label_result_effort1.config(text="Esfuerzo estimado: ")
     label_result_time1.config(text="Tiempo de desarrollo: ")
 
-def show_form2():
+def mostrarccm2():
     clear_frame()
     
     tk.Label(main_frame, text="COCOMO II", font=('Helvetica', 16, 'bold'), bg='#F0F8FF').grid(row=0, columnspan=3, pady=10)
@@ -182,7 +182,7 @@ def show_form2():
     button_calcular = ttk.Button(button_frame, text="Calcular Esfuerzo", command=calcular_esfuerzo, style="Custom.TButton")
     button_calcular.pack(side=tk.LEFT, padx=5)
 
-    button_limpiar = ttk.Button(button_frame, text="Limpiar Campos", command=clear_form2, style="Custom.TButton")
+    button_limpiar = ttk.Button(button_frame, text="Limpiar Campos", command=limpiarccm2, style="Custom.TButton")
     button_limpiar.pack(side=tk.LEFT, padx=5)
 
     # Etiqueta para mostrar el resultado
@@ -191,10 +191,40 @@ def show_form2():
     label_result.grid(row=4, column=0, columnspan=3, padx=10, pady=10)
 
 
-def show_form3():
+def cerrarprograma():
     clear_frame()
     tk.Label(main_frame, text="Cerrar Programa", font=('Helvetica', 16, 'bold'), bg='#F0F8FF').grid(row=0, columnspan=3, pady=10)
     ttk.Button(main_frame, text="Cerrar", command=close_app, style="Custom.TButton").grid(row=1, columnspan=3, pady=10)
+
+
+def mostrar_acerca_de():
+    #cambiar_estado_boton(btn_acerca_de)
+    # Crear la portada
+    clear_frame()
+    portada_frame = tk.Frame(main_frame, bg='white', width=1000, height=800)
+    portada_frame.pack(fill='both', expand=True)
+
+    titulo_label = tk.Label(portada_frame, text="Software de la Unidad 4", font=('Helvetica', 36, 'bold'), bg='white')
+    titulo_label.pack(pady='40')
+
+    descripcion_texto = """
+    Se ha desarrollado el metodo de Cocomo Basico y Cocomo 2
+    """
+
+    descripcion_label = tk.Label(portada_frame, text=descripcion_texto, font=('Helvetica', 18), bg='white', justify='left')
+    descripcion_label.pack(padx=100, pady=20)
+
+    equipo_texto = """
+    Desarrollado por:
+    - Jonathan Oswaldo Castaneda Fabián, CF2014
+    - Gerson Alexis Pérez Monterroza, PM20072
+    """
+
+    equipo_label = tk.Label(portada_frame, text=equipo_texto, font=('Helvetica', 16), bg='white', justify='left')
+    equipo_label.pack(pady=20)
+
+
+
 
 def close_app():
     root.quit()
@@ -207,7 +237,7 @@ def clear_frame():
 root = tk.Tk()
 root.title("Trabajo de unidad 4")
 root.geometry("1200x600")
-
+root.state('zoomed')
 # Aplicar estilo personalizado
 style = ttk.Style()
 style.configure("TFrame", background="#F0F8FF")
@@ -225,17 +255,20 @@ main_frame = ttk.Frame(root, style="TFrame")
 main_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
 # Crear y colocar los botones del menú en el frame del menú
-button_form1 = ttk.Button(menu_frame, text="COCOMO", command=show_form1, style="TButton")
-button_form1.pack(fill=tk.X, padx=10, pady=10)
+cocomo1 = ttk.Button(menu_frame, text="COCOMO", command=mostrarccm1, style="TButton")
+cocomo1.pack(fill=tk.X, padx=10, pady=10)
 
-button_form2 = ttk.Button(menu_frame, text="COCOMO II", command=show_form2, style="TButton")
-button_form2.pack(fill=tk.X, padx=10, pady=10)
+cocomo2 = ttk.Button(menu_frame, text="COCOMO II", command=mostrarccm2, style="TButton")
+cocomo2.pack(fill=tk.X, padx=10, pady=10)
 
-button_form3 = ttk.Button(menu_frame, text="Cerrar Programa", command=close_app, style="TButton")
-button_form3.pack(fill=tk.X, padx=10, pady=10)
+btn_acerca_de = ttk.Button(menu_frame, text="Acerca de", command=mostrar_acerca_de, style="TButton")
+btn_acerca_de.pack(fill=tk.X, padx=10, pady=10)
+
+cerrarprograma = ttk.Button(menu_frame, text="Cerrar Programa", command=close_app, style="TButton")
+cerrarprograma.pack(fill=tk.X, padx=10, pady=10)
 
 # Iniciar con el primer formulario visible
-show_form1()
+mostrar_acerca_de()
 
 # Iniciar el bucle principal de la ventana
 root.mainloop()

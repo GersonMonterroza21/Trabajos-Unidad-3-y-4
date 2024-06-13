@@ -850,7 +850,7 @@ def mostrar_acerca_de():
     equipo_texto = """
     Desarrollado por:
     - Jonathan Oswaldo Castaneda Fabián, CF2014
-    - Gerson Alexis Pérez Monterroza, 20072
+    - Gerson Alexis Pérez Monterroza, PM20072
     """
 
     equipo_label = tk.Label(portada_frame, text=equipo_texto, font=('Helvetica', 16), bg='white', justify='left')
