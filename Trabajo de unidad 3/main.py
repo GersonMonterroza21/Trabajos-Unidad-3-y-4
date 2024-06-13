@@ -649,6 +649,188 @@ def puntos_objeto():
     pos_y = root.winfo_screenheight() * 0.0  # Posición y al 10% del alto de la pantalla
     cuadro.place(x=pos_x, y=pos_y)
 
+    COLOR_FONDO = "#D6EAF8"         # Light Blue
+    COLOR_TITULO = "#000000"        # Dark Blue
+    COLOR_BORDE = "groove"          # Groove
+    COLOR_BORDE_INTERNO = "solid"   # Solid
+    COLOR_ETIQUETA = "#5499C7"      # Sky Blue
+
+    # contador
+    contador = 0
+    contadorFilas = 0
+
+    # Variable de control
+    variables_valor = []
+
+    def crear_cuadro(titulo_tabla, x, y, simple, medio, complejo):
+        frame_cuadro = tk.Frame(root, borderwidth=2, relief=COLOR_BORDE, bg=COLOR_FONDO)
+        frame_cuadro.place(relx=x, rely=y, relwidth=0.25, relheight=0.3)
+
+        # Lista para almacenar los ítems (nombre, tipo, valor)
+        nombre_tabla = []
+
+        # Crear un Frame para el título y el botón
+        title_button_frame = tk.Frame(frame_cuadro, bg=COLOR_FONDO)
+        title_button_frame.pack(side="top", fill="x", padx=10, pady=10)
+
+        # Crear y colocar el título del cuadro en el contenedor
+        titulo_cuadro = tk.Label(title_button_frame, text=titulo_tabla, font=("Arial", 10), bg=COLOR_FONDO, fg=COLOR_TITULO)
+        titulo_cuadro.pack(side="left")
+
+        # Crear un botón "Agregar" dentro del contenedor
+        button_agregar = tk.Button(title_button_frame, text="Agregar", command=lambda: agregar_item(table_frame, nombre_tabla, simple, medio, complejo))
+        button_agregar.pack(side="right")
+
+        # Crear un Frame para la "tabla" dentro del cuadro
+        table_frame = tk.Frame(frame_cuadro, bg=COLOR_FONDO)
+        table_frame.pack(pady=0, fill="both", expand=True)
+
+        return table_frame, nombre_tabla
+
+    # ------------------------------------------------------------------------------------------
+
+    def agregar_item(table_frame, nombre_tabla, simple, medio, complejo):
+        popup = tk.Toplevel(root)
+        popup.title("Agregar Entrada")
+
+        tk.Label(popup, text="Nombre:", bg=COLOR_FONDO).grid(row=0, column=0, pady=10)
+        nombre_entry = tk.Entry(popup)
+        nombre_entry.grid(row=0, column=1, pady=10)
+
+        tk.Label(popup, text="Tipo:", bg=COLOR_FONDO).grid(row=1, column=0, pady=10)
+        tipo_var = tk.StringVar(popup)
+        tipo_var.set("Simple")  # Valor predeterminado
+        tipo_menu = tk.OptionMenu(popup, tipo_var, "Simple", "Medio", "Complejo")
+        tipo_menu.grid(row=1, column=1, pady=10)
+
+        def guardar_item():
+            nombre = nombre_entry.get()
+            tipo = tipo_var.get()
+            if nombre:
+                valor = simple if tipo == "Simple" else (medio if tipo == "Medio" else complejo)
+                nombre_tabla.append((nombre, tipo, valor))
+                actualizar_tabla(table_frame, nombre_tabla, simple, medio, complejo)
+                actualizar_total()
+                popup.destroy()
+
+        tk.Button(popup, text="Guardar", command=guardar_item).grid(row=2, columnspan=2, pady=10)
+
+    def editar_item(table_frame, idx, nombre_tabla, medio, simple, complejo):
+        item = nombre_tabla[idx - 1]  # Obtenemos el elemento correspondiente al índice
+        nombre_antiguo, tipo_antiguo, _ = item  # Desempaquetamos el elemento
+
+        # Crear la root emergente para la edición
+        popup = tk.Toplevel(root)
+        popup.title("Editar Entrada")
+
+        # Campos prellenados con los valores antiguos
+        tk.Label(popup, text="Nombre:", bg=COLOR_FONDO).grid(row=0, column=0, pady=10)
+        nombre_entry = tk.Entry(popup)
+        nombre_entry.insert(0, nombre_antiguo)  # Poner el valor antiguo en el campo
+        nombre_entry.grid(row=0, column=1, pady=10)
+
+        tk.Label(popup, text="Tipo:", bg=COLOR_FONDO).grid(row=1, column=0, pady=10)
+        tipo_var = tk.StringVar(popup)
+        tipo_var.set(tipo_antiguo)  # Poner el valor antiguo como seleccionado
+        tipo_menu = tk.OptionMenu(popup, tipo_var, "Simple", "Medio", "Complejo")
+        tipo_menu.grid(row=1, column=1, pady=10)
+
+        def guardar_edicion():
+            nombre_nuevo = nombre_entry.get()
+            tipo_nuevo = tipo_var.get()
+            if nombre_nuevo:
+                valor_nuevo = simple if tipo_nuevo == "Simple" else (medio if tipo_nuevo == "Medio" else complejo)
+                nombre_tabla[idx - 1] = (nombre_nuevo, tipo_nuevo, valor_nuevo) # Actualizar la lista con los nuevos valores
+                actualizar_tabla(table_frame, nombre_tabla, simple, medio, complejo)
+                actualizar_total()
+                popup.destroy()
+
+        tk.Button(popup, text="Guardar", command=guardar_edicion).grid(row=2, columnspan=2, pady=10)
+
+    def eliminar_item(table_frame, idx, nombre_tabla, simple, medio, complejo):
+        del nombre_tabla[idx - 1]  # Restamos 1 porque el índice del widget comienza en 1, pero en la lista comienza en 0
+        actualizar_tabla(table_frame, nombre_tabla, simple, medio, complejo)
+        actualizar_total()
+
+    def actualizar_tabla(table_frame, nombre_tabla, simple, medio, complejo):
+        # Limpiar la tabla
+        for widget in table_frame.winfo_children():
+            widget.destroy()
+
+        # Títulos de la tabla
+        tk.Label(table_frame, text="Nombre", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=10, bg=COLOR_ETIQUETA).grid(row=0, column=0, sticky="nsew")
+        tk.Label(table_frame, text="Tipo", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=8, bg=COLOR_ETIQUETA).grid(row=0, column=1, sticky="nsew")
+        tk.Label(table_frame, text="Valor", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=8, bg=COLOR_ETIQUETA).grid(row=0, column=2, sticky="nsew")
+
+        # Agregar datos a la tabla
+        contador = 0
+        contadorFilas = 0
+        for i, (nombre, tipo, valor) in enumerate(nombre_tabla, start=1):
+            tk.Label(table_frame, text=nombre, borderwidth=1, relief=COLOR_BORDE_INTERNO, width=10).grid(row=i, column=0, sticky="nsew")
+            tk.Label(table_frame, text=tipo, borderwidth=1, relief=COLOR_BORDE_INTERNO, width=8).grid(row=i, column=1, sticky="nsew")
+            tk.Label(table_frame, text=valor, borderwidth=1, relief=COLOR_BORDE_INTERNO, width=8).grid(row=i, column=2, sticky="nsew")
+            # Botones para editar y eliminar el ítem
+            editar_button = tk.Button(table_frame, text="Editar", command=lambda idx=i: editar_item(table_frame, idx, nombre_tabla, simple, medio, complejo))
+            editar_button.grid(row=i, column=3)
+            eliminar_button = tk.Button(table_frame, text="Eliminar", command=lambda idx=i: eliminar_item(table_frame, idx, nombre_tabla, simple, medio, complejo))
+            eliminar_button.grid(row=i, column=4)
+
+            contador += valor
+            contadorFilas = i
+
+        # Fila del total
+        tk.Label(table_frame, text="TOTAL", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=10, bg=COLOR_ETIQUETA).grid(row=contadorFilas + 1, column=0, sticky="nsew")
+        tk.Label(table_frame, text="", borderwidth=1, relief=COLOR_BORDE_INTERNO, width=8, bg=COLOR_ETIQUETA).grid(row=contadorFilas + 1, column=1, sticky="nsew")
+        tk.Label(table_frame, text=contador, borderwidth=1, relief=COLOR_BORDE_INTERNO, width=8, bg=COLOR_ETIQUETA).grid(row=contadorFilas + 1, column=2, sticky="nsew")
+
+
+    # ----------------------------------------------------------------------------------------
+    # Crear un Frame para la sección que ocupe el 40% del tamaño de la root
+
+   
+    # ------------------------------------------------------------------------------------------
+    def crear_seccion_resultado(titulo):
+        frame_seccion = tk.Frame(root, borderwidth=2, relief=COLOR_BORDE, bg=COLOR_FONDO)
+        frame_seccion.place(relx=0.36, rely=0.61, relwidth=0.25, relheight=0.15)
+
+        # Título de la sección
+        titulo_label = tk.Label(frame_seccion, text=titulo, font=("Arial", 10), bg=COLOR_FONDO, fg=COLOR_TITULO)
+        titulo_label.pack(pady=10)
+
+        # Etiqueta para el valor del resultado
+        valor_resultante = tk.Label(frame_seccion, text="0", font=("Arial", 12), bg=COLOR_FONDO)
+        valor_resultante.pack(pady=10)
+
+        return frame_seccion, valor_resultante
+
+    #---------------------------------------------------------------------------------------------
+
+    #Control de los totales
+
+    def actualizar_total():
+        total = 0
+        for items in [itemsEntradas, itemsSalidas, itemsPeticiones]:
+            total += sum(valor for _, _, valor in items)
+        resultado_label.config(text=str(total))
+
+
+    #----------------------------------------------------------------
+
+    table_frame_entradas, itemsEntradas = crear_cuadro("Pantallas", 0.11, 0.01, 1, 2, 3)
+    table_frame_salidas, itemsSalidas = crear_cuadro("Reportes", 0.11, 0.31, 2, 5, 8)
+    table_frame_peticioines, itemsPeticiones = crear_cuadro("Componentes 3GL", 0.11, 0.61, 5, 7, 10)
+
+
+    _, resultado_label = crear_seccion_resultado("Puntos de Objetos Totales")
+
+
+    # Mostrar la tasbla inicialmente
+    actualizar_tabla(table_frame_entradas, itemsEntradas)
+    actualizar_tabla(table_frame_salidas, itemsSalidas)
+    actualizar_tabla(table_frame_peticioines, itemsPeticiones)
+
+    actualizar_total()
+
 def mostrar_acerca_de():
     cambiar_estado_boton(btn_acerca_de)
     # Crear la portada
