@@ -1,10 +1,12 @@
+import subprocess
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 
 # Crear la root principal
 root = tk.Tk()
 root.geometry("1200x800")  # Establecer las dimensiones de la root
-root.title("Aplicación con Menú")
+root.title("Trabajo de unidad 3")
 root.state('zoomed')
 
 # Crear un Frame para el menú lateral
@@ -16,7 +18,7 @@ content_frame = tk.Frame(root, bg='white', width=1000, height=800)
 content_frame.pack(side='right', fill='both', expand=True)
 #Funcion que controla la actividad de los botones
 def cambiar_estado_boton(boton_activado):
-    for boton in [btn_punto_funcion, btn_casos_usos, btn_punto_objeto, btn_acerca_de]:
+    for boton in [btn_punto_funcion, btn_casos_usos, btn_punto_objeto, btn_Mccall, btn_acerca_de]:
         boton.config(bg='SystemButtonFace')
 
     boton_activado.config(bg='lightblue')
@@ -855,8 +857,12 @@ def mostrar_acerca_de():
 
     equipo_label = tk.Label(portada_frame, text=equipo_texto, font=('Helvetica', 16), bg='white', justify='left')
     equipo_label.pack(pady=20)
-
-
+def abrir_otro_programa():
+    try:
+        # Reemplaza 'otro_programa.py' con el nombre del programa que deseas ejecutar
+        subprocess.Popen(['python', 'Trabajo de unidad 3/Maccall.py'])
+    except FileNotFoundError:
+        messagebox.showerror("Error", "El programa no se encontró")
 
 # Botones del menú lateral
 btn_punto_funcion = tk.Button(menu_frame, text="Puntos de Función", command=puntos_de_funcion)
@@ -868,9 +874,14 @@ btn_casos_usos.pack(fill='x')
 btn_punto_objeto = tk.Button(menu_frame, text="Puntos Objeto", command=puntos_objeto)
 btn_punto_objeto.pack(fill='x')
 
+btn_Mccall = tk.Button(menu_frame, text="Metricas por MaCcall", command=abrir_otro_programa)
+btn_Mccall.pack(fill='x')
+
 btn_acerca_de = tk.Button(menu_frame, text="Acerca de", command=mostrar_acerca_de)
 btn_acerca_de.pack(fill='x')
 
+
+    
 # Etiqueta para mostrar el contenido principal
 #content_label = tk.Label(content_frame, text="Bienvenido", font=('Helvetica', 24), bg='white')
 #content_label.pack(pady=20)

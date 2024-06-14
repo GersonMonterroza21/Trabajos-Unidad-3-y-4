@@ -1,5 +1,27 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
+# Crear la ventana principal
+root = tk.Tk()
+root.title("Trabajo de unidad 4")
+root.geometry("1200x600")
+root.state('zoomed')
+
+# Aplicar estilo personalizado
+style = ttk.Style()
+style.configure("TFrame", background="#F0F8FF")
+style.configure("TLabel", background="#F0F8FF", font=('Helvetica', 12))
+style.configure("TButton", font=('Helvetica', 12))
+style.configure("TLabelframe", background="#F0F8FF", font=('Helvetica', 12))
+style.configure("TLabelframe.Label", font=('Helvetica', 14, 'bold'))
+
+# Crear un frame para los botones del menú
+menu_frame = tk.Frame(root, bg='lightgrey', width=200, height=800)
+menu_frame.pack(side='left', fill='y')
+
+# Crear un frame principal donde se mostrarán los formularios
+main_frame = ttk.Frame(root, style="TFrame")
+main_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+
 
 # Definición de las constantes y factores de escala
 factores_escala = {
@@ -41,7 +63,9 @@ B = 1.01
 A = 2.94
 
 def calcular_esfuerzo():
+    
     try:
+        
         kloc = float(entry_kloc.get())
         if kloc <= 0:
             raise ValueError("KLOC debe ser un valor positivo")
@@ -102,6 +126,7 @@ def mostrarccm1():
 
 def calculate_cocomo1():
     try:
+        
         kloc = float(entry_kloc1.get())
         project_type = combobox_type.get()
 
@@ -126,7 +151,6 @@ def limpiarccm1():
 
 def mostrarccm2():
     clear_frame()
-    
     tk.Label(main_frame, text="COCOMO II", font=('Helvetica', 16, 'bold'), bg='#F0F8FF').grid(row=0, columnspan=3, pady=10)
     
     # Frame para KLOC
@@ -198,7 +222,6 @@ def cerrarprograma():
 
 
 def mostrar_acerca_de():
-    #cambiar_estado_boton(btn_acerca_de)
     # Crear la portada
     clear_frame()
     portada_frame = tk.Frame(main_frame, bg='white', width=1000, height=800)
@@ -224,8 +247,6 @@ def mostrar_acerca_de():
     equipo_label.pack(pady=20)
 
 
-
-
 def close_app():
     root.quit()
 
@@ -233,41 +254,22 @@ def clear_frame():
     for widget in main_frame.winfo_children():
         widget.destroy()
 
-# Crear la ventana principal
-root = tk.Tk()
-root.title("Trabajo de unidad 4")
-root.geometry("1200x600")
-root.state('zoomed')
-# Aplicar estilo personalizado
-style = ttk.Style()
-style.configure("TFrame", background="#F0F8FF")
-style.configure("TLabel", background="#F0F8FF", font=('Helvetica', 12))
-style.configure("TButton", font=('Helvetica', 12))
-style.configure("TLabelframe", background="#F0F8FF", font=('Helvetica', 12))
-style.configure("TLabelframe.Label", font=('Helvetica', 14, 'bold'))
-
-# Crear un frame para los botones del menú
-menu_frame = tk.Frame(root, bg='lightgrey', width=200, height=800)
-menu_frame.pack(side='left', fill='y')
-
-# Crear un frame principal donde se mostrarán los formularios
-main_frame = ttk.Frame(root, style="TFrame")
-main_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
 # Crear y colocar los botones del menú en el frame del menú
-cocomo1 = ttk.Button(menu_frame, text="COCOMO", command=mostrarccm1, style="TButton")
-cocomo1.pack(fill=tk.X, padx=10, pady=10)
+btncocomo1 = ttk.Button(menu_frame, text="COCOMO", command=mostrarccm1, style="TButton")
+btncocomo1.pack(fill=tk.X, padx=10, pady=10)
 
-cocomo2 = ttk.Button(menu_frame, text="COCOMO II", command=mostrarccm2, style="TButton")
-cocomo2.pack(fill=tk.X, padx=10, pady=10)
+btncocomo2 = ttk.Button(menu_frame, text="COCOMO II", command=mostrarccm2, style="TButton")
+btncocomo2.pack(fill=tk.X, padx=10, pady=10)
 
 btn_acerca_de = ttk.Button(menu_frame, text="Acerca de", command=mostrar_acerca_de, style="TButton")
 btn_acerca_de.pack(fill=tk.X, padx=10, pady=10)
 
-cerrarprograma = ttk.Button(menu_frame, text="Cerrar Programa", command=close_app, style="TButton")
-cerrarprograma.pack(fill=tk.X, padx=10, pady=10)
+btncerrarprograma = ttk.Button(menu_frame, text="Cerrar Programa", command=close_app, style="TButton")
+btncerrarprograma.pack(fill=tk.X, padx=10, pady=10)
 
 # Iniciar con el primer formulario visible
+
 mostrar_acerca_de()
 
 # Iniciar el bucle principal de la ventana
